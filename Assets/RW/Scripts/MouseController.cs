@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,8 @@ public class MouseController : MonoBehaviour
     private bool isGrounded;
     public LayerMask groundCheckLayerMask;
     private Animator mouseAnimator;
+
+    public ParticleSystem jetpack;
 
     void Start()
     {
@@ -40,6 +43,7 @@ public class MouseController : MonoBehaviour
         newVelocity.x = forwardMovementSpeed;
         playerRigidbody.velocity = newVelocity;
         UpdateGroundedStatus();
+        AdjustJetpack(jetpackActive);
     }
 
     void UpdateGroundedStatus()
@@ -48,5 +52,19 @@ public class MouseController : MonoBehaviour
         isGrounded = Physics2D.OverlapCircle(groundCheckTransform.position, 0.1f, groundCheckLayerMask);
         //2
         mouseAnimator.SetBool("isGrounded", isGrounded);
+    }
+
+    void AdjustJetpack(bool jetpackActive)
+    {
+        var jetpackEmission = jetpack.emission;
+        jetpackEmission.enabled = !isGrounded;
+        if (jetpackActive)
+        {
+            jetpackEmission.rateOverTime = 300.0f;
+        }
+        else
+        {
+            jetpackEmission.rateOverTime = 75.0f;
+        }
     }
 }
