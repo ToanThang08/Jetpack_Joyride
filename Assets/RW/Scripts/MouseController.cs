@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MouseController : MonoBehaviour
 {
@@ -25,6 +26,13 @@ public class MouseController : MonoBehaviour
 
     public Text coinsCollectedLabel;
 
+    public Button restartButton;
+
+    public AudioClip coinCollectSound;
+
+    public AudioSource jetpackAudio;
+    public AudioSource footstepsAudio;
+
     void Start()
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
@@ -44,6 +52,10 @@ public class MouseController : MonoBehaviour
         if (jetpackActive)
         {
             playerRigidbody.AddForce(new Vector2(0, jetpackForce));
+            if (isDead && isGrounded)
+            {
+                restartButton.gameObject.SetActive(true);
+            }
         }
 
         if (!isDead)
@@ -93,6 +105,11 @@ public class MouseController : MonoBehaviour
 
     void HitByLaser(Collider2D laserCollider)
     {
+        if (!isDead)
+        {
+            AudioSource laserZap = laserCollider.gameObject.GetComponent<AudioSource>();
+            laserZap.Play();
+        }
         isDead = true;
     }
 
@@ -101,5 +118,11 @@ public class MouseController : MonoBehaviour
         coins++;
         Destroy(coinCollider.gameObject);
         coinsCollectedLabel.text = coins.ToString();
+        AudioSource.PlayClipAtPoint(coinCollectSound, transform.position);
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene("RocketMouse");
     }
 }
