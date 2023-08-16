@@ -13,7 +13,6 @@ public class GeneratorScript : MonoBehaviour
     {
         float height = 2.0f * Camera.main.orthographicSize;
         screenWidthInPoints = height * Camera.main.aspect;
-
         StartCoroutine(GeneratorCheck());
     }
 
@@ -87,7 +86,7 @@ public class GeneratorScript : MonoBehaviour
 
     private IEnumerator GeneratorCheck()
     {
-        while(true)
+        while (true)
         {
             GenerateRoomIfRequired();
             yield return new WaitForSeconds(0.25f);
