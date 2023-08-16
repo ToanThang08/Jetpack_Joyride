@@ -20,6 +20,8 @@ public class MouseController : MonoBehaviour
 
     private bool isDead = false;
 
+    private uint coins = 0;
+
     void Start()
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
@@ -75,8 +77,15 @@ public class MouseController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        HitByLaser(collider);
-        mouseAnimator.SetBool("isDead", true);
+        if (collider.gameObject.CompareTag("Coins"))
+        {
+            CollectCoin(collider);
+        }
+        else
+        {
+            HitByLaser(collider);
+        }
+        //mouseAnimator.SetBool("isDead", true);
     }
 
     void HitByLaser(Collider2D laserCollider)
@@ -84,4 +93,9 @@ public class MouseController : MonoBehaviour
         isDead = true;
     }
 
+    void CollectCoin(Collider2D coinCollider)
+    {
+        coins++;
+        Destroy(coinCollider.gameObject);
+    }
 }
