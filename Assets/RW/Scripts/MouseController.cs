@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MouseController : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class MouseController : MonoBehaviour
     private bool isDead = false;
 
     private uint coins = 0;
+
+    public Text coinsCollectedLabel;
 
     void Start()
     {
@@ -97,5 +100,6 @@ public class MouseController : MonoBehaviour
     {
         coins++;
         Destroy(coinCollider.gameObject);
+        coinsCollectedLabel.text = coins.ToString();
     }
 }
