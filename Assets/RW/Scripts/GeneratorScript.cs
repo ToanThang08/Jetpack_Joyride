@@ -1,3 +1,33 @@
+﻿/*
+* Copyright (c) 2018 Razeware LLC
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in
+* all copies or substantial portions of the Software.
+*
+* Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
+* distribute, sublicense, create a derivative work, and/or sell copies of the
+* Software in any work that is designed, intended, or marketed for pedagogical or
+* instructional purposes related to programming, coding, application development,
+* or information technology.  Permission for such use, copying, modification,
+* merger, publication, distribution, sublicensing, creation of derivative works,
+* or sale is expressly withheld.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+* THE SOFTWARE.
+*/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,9 +50,8 @@ public class GeneratorScript : MonoBehaviour
     public float objectsMinRotation = -45.0f;
     public float objectsMaxRotation = 45.0f;
 
-
-    // Start is called before the first frame update
-    void Start()
+    // Use this for initialization
+    private void Start()
     {
         float height = 2.0f * Camera.main.orthographicSize;
         screenWidthInPoints = height * Camera.main.aspect;
@@ -30,23 +59,27 @@ public class GeneratorScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
     }
 
-    void AddRoom(float farthestRoomEndX)
+    private void AddRoom(float farhtestRoomEndX)
     {
         //1
         int randomRoomIndex = Random.Range(0, availableRooms.Length);
+
         //2
         GameObject room = (GameObject)Instantiate(availableRooms[randomRoomIndex]);
+
         //3
         float roomWidth = room.transform.Find("floor").localScale.x;
+
         //4
-        float roomCenter = farthestRoomEndX + roomWidth * 0.5f;
+        float roomCenter = farhtestRoomEndX + roomWidth * 0.5f;
+
         //5
         room.transform.position = new Vector3(roomCenter, 0, 0);
+
         //6
         currentRooms.Add(room);
     }
@@ -107,55 +140,64 @@ public class GeneratorScript : MonoBehaviour
         }
     }
 
-    void AddObject(float lastObjectX)
+    private void AddObject(float lastObjectX)
     {
         //1
         int randomIndex = Random.Range(0, availableObjects.Length);
+
         //2
         GameObject obj = (GameObject)Instantiate(availableObjects[randomIndex]);
+
         //3
         float objectPositionX = lastObjectX + Random.Range(objectsMinDistance, objectsMaxDistance);
         float randomY = Random.Range(objectsMinY, objectsMaxY);
         obj.transform.position = new Vector3(objectPositionX, randomY, 0);
+
         //4
         float rotation = Random.Range(objectsMinRotation, objectsMaxRotation);
         obj.transform.rotation = Quaternion.Euler(Vector3.forward * rotation);
+
         //5
         objects.Add(obj);
     }
 
-    void GenerateObjectsIfRequired()
+    private void GenerateObjectsIfRequired()
     {
         //1
         float playerX = transform.position.x;
         float removeObjectsX = playerX - screenWidthInPoints;
         float addObjectX = playerX + screenWidthInPoints;
         float farthestObjectX = 0;
+
         //2
         List<GameObject> objectsToRemove = new List<GameObject>();
+
         foreach (var obj in objects)
         {
             //3
             float objX = obj.transform.position.x;
+
             //4
             farthestObjectX = Mathf.Max(farthestObjectX, objX);
+
             //5
             if (objX < removeObjectsX)
             {
                 objectsToRemove.Add(obj);
             }
         }
+
         //6
         foreach (var obj in objectsToRemove)
         {
             objects.Remove(obj);
             Destroy(obj);
         }
+
         //7
         if (farthestObjectX < addObjectX)
         {
             AddObject(farthestObjectX);
         }
     }
-
 }
