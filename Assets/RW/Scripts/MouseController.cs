@@ -76,6 +76,7 @@ public class MouseController : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collider)
     {
         HitByLaser(collider);
+        mouseAnimator.SetBool("isDead", true);
     }
 
     void HitByLaser(Collider2D laserCollider)
