@@ -13,6 +13,8 @@ public class UIManagerScript : MonoBehaviour
 
     public Animator contentPanel;
 
+    public Animator gearImage;
+
     public void StartGame() 
     {
         SceneManager.LoadScene("RocketMouse");
@@ -37,6 +39,8 @@ public class UIManagerScript : MonoBehaviour
     {
         bool isHidden = contentPanel.GetBool("isHidden");
         contentPanel.SetBool("isHidden", !isHidden);
+
+        gearImage.SetBool("isHidden", !isHidden);
     }
 
 }
